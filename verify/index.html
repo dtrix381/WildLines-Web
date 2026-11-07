@@ -1,0 +1,731 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Wildlines Verification</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --bg: #0B001A;
+      --bg-light: #16052A;
+      --pink: #FF007F;
+      --cyan: #00F0FF;
+      --white: #F7F3FF;
+      --muted: #B7A9CE;
+      --glass: rgba(24, 9, 44, 0.82);
+      --border: rgba(0, 240, 255, 0.32);
+      --success: #64FFB0;
+      --danger: #FF5C91;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      font-family: "Rajdhani", sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          rgba(255, 0, 127, 0.16),
+          transparent 55%
+        ),
+        radial-gradient(
+          ellipse at 50% 100%,
+          rgba(0, 240, 255, 0.12),
+          transparent 50%
+        ),
+        var(--bg);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(
+          rgba(0, 240, 255, 0.055) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(0, 240, 255, 0.055) 1px,
+          transparent 1px
+        );
+      background-size: 42px 42px;
+      mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        black 25%,
+        black 80%,
+        transparent
+      );
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      left: 50%;
+      top: 50%;
+      z-index: -1;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(
+        circle,
+        rgba(255, 0, 127, 0.09),
+        transparent 68%
+      );
+    }
+
+    main {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      padding: 34px;
+      overflow: hidden;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow:
+        0 0 28px rgba(0, 240, 255, 0.09),
+        0 0 70px rgba(255, 0, 127, 0.07),
+        inset 0 0 24px rgba(255, 255, 255, 0.018);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      animation: cardEnter 0.7s ease both;
+    }
+
+    main::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--pink),
+        var(--cyan),
+        transparent
+      );
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+    }
+
+    .logo-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .logo-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 180px;
+      object-fit: contain;
+      object-position: center;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--cyan);
+      font-family: "Orbitron", sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--white);
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 800;
+      line-height: 1.4;
+      letter-spacing: 1px;
+      text-align: center;
+      text-shadow: 0 0 18px rgba(255, 0, 127, 0.28);
+    }
+
+    .intro {
+      max-width: 380px;
+      margin: 14px auto 24px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .section-label {
+      margin: 0 0 12px;
+      color: var(--cyan);
+      font-family: "Orbitron", sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    #status {
+      margin: 22px 0;
+      padding: 15px 16px;
+      color: var(--white);
+      background: rgba(11, 0, 26, 0.75);
+      border: 1px solid rgba(0, 240, 255, 0.22);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      transition:
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    #status[data-state="success"] {
+      border-color: rgba(100, 255, 176, 0.55);
+      border-left-color: var(--success);
+      background: rgba(100, 255, 176, 0.06);
+    }
+
+    #status[data-state="error"] {
+      border-color: rgba(255, 92, 145, 0.55);
+      border-left-color: var(--danger);
+      background: rgba(255, 92, 145, 0.06);
+    }
+
+    #connections {
+      margin-top: 24px;
+    }
+
+    .connect-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 56px;
+      margin: 13px 0;
+      padding: 14px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 11px;
+      color: #FFFFFF;
+      background: linear-gradient(
+        110deg,
+        rgba(88, 101, 242, 0.18),
+        rgba(88, 101, 242, 0.08)
+      );
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.09);
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease;
+    }
+
+    .connect-button:hover,
+    .connect-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      box-shadow:
+        0 0 12px rgba(0, 240, 255, 0.23),
+        0 0 28px rgba(88, 101, 242, 0.15);
+      outline: none;
+    }
+
+    .connect-button.kick {
+      background: linear-gradient(
+        110deg,
+        rgba(83, 252, 24, 0.13),
+        rgba(83, 252, 24, 0.045)
+      );
+      box-shadow: 0 0 15px rgba(83, 252, 24, 0.06);
+    }
+
+    .connect-button.kick:hover,
+    .connect-button.kick:focus-visible {
+      border-color: #53FC18;
+      box-shadow: 0 0 22px rgba(83, 252, 24, 0.2);
+    }
+
+    .connect-button.is-connected {
+      color: var(--success);
+      border-color: rgba(100, 255, 176, 0.35);
+      background: rgba(100, 255, 176, 0.06);
+      box-shadow: none;
+      cursor: default;
+      transform: none;
+    }
+
+    .connect-button.is-connected:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .service-logo {
+      display: block;
+      width: 25px;
+      height: 25px;
+      flex: 0 0 25px;
+      object-fit: contain;
+    }
+
+    .small {
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .footer-line {
+      width: 70px;
+      height: 2px;
+      margin: 25px auto 0;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 22px 12px;
+      }
+
+      main {
+        padding: 25px 20px;
+        border-radius: 17px;
+      }
+
+      .logo-image {
+        max-height: 145px;
+      }
+
+      .connect-button {
+        min-height: 54px;
+        font-size: 11px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    
+    <div class="logo-container">
+      <img
+        src="./WildLines.png"
+        alt="Wildlines Logo"
+        class="logo-image"
+      >
+    </div>
+
+    <p class="eyebrow">WILDLINES // ACCOUNT ACCESS</p>
+
+    <h1>WILDLINES VERIFICATION</h1>
+
+    <p class="intro">
+      Connect your Discord and Kick accounts to complete your
+      Wildlines account verification.
+    </p>
+
+    <div
+      id="status"
+      role="status"
+      aria-live="polite"
+      data-state="loading"
+    >
+      Loading your verification session...
+    </div>
+
+    <section id="connections" hidden>
+      <p class="section-label">Connect your accounts</p>
+
+      <a
+        id="discordButton"
+        class="connect-button"
+        href="#"
+      >
+        <img
+          src="https://cdn.simpleicons.org/discord/5865F2"
+          alt=""
+          class="service-logo"
+          aria-hidden="true"
+        >
+        <span id="discordButtonLabel">Connect Discord</span>
+      </a>
+
+      <a
+        id="kickButton"
+        class="connect-button kick"
+        href="#"
+      >
+        <img
+          src="https://cdn.simpleicons.org/kick/53FC18"
+          alt=""
+          class="service-logo"
+          aria-hidden="true"
+        >
+        <span id="kickButtonLabel">Connect Kick</span>
+      </a>
+
+      <p class="small">
+        Connect only accounts you own. Your verification session
+        expires after 15 minutes. Return to this page after
+        connecting each account.
+      </p>
+    </section>
+
+    <div class="footer-line"></div>
+  </main>
+
+  <script>
+    const API = "https://wildlines-verification-test.onrender.com";
+
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session");
+    const result = params.get("result");
+
+    const statusElement = document.getElementById("status");
+    const connections = document.getElementById("connections");
+
+    const discordButton = document.getElementById("discordButton");
+    const kickButton = document.getElementById("kickButton");
+
+    const discordButtonLabel =
+      document.getElementById("discordButtonLabel");
+
+    const kickButtonLabel =
+      document.getElementById("kickButtonLabel");
+
+    let stopped = false;
+    let checking = false;
+    let pollingTimer = null;
+    let pollingStarted = false;
+
+    const messages = {
+      discord_connected: "Discord connected successfully.",
+      kick_connected: "Kick connected successfully.",
+
+      discord_mismatch:
+        "The Discord account does not match the account that started verification. Please return to your Discord server and try again.",
+
+      discord_error:
+        "Discord connection failed. Please try again.",
+
+      kick_error:
+        "Kick connection failed. Please try again.",
+
+      expired:
+        "Your verification session expired. Start again from Discord.",
+
+      config_error:
+        "The connection service is not configured correctly. Please contact an administrator."
+    };
+
+    function setStatus(message, state = "loading") {
+      statusElement.textContent = message;
+      statusElement.dataset.state = state;
+    }
+
+    function stopVerification(message, state = "loading") {
+      stopped = true;
+
+      if (pollingTimer !== null) {
+        clearInterval(pollingTimer);
+        pollingTimer = null;
+      }
+
+      setStatus(message, state);
+      connections.hidden = true;
+    }
+
+    function setConnectedButton(button, labelElement, connected, name) {
+      if (connected) {
+        labelElement.textContent = `${name} Connected`;
+        button.removeAttribute("href");
+        button.setAttribute("aria-disabled", "true");
+        button.classList.add("is-connected");
+      } else {
+        labelElement.textContent = `Connect ${name}`;
+        button.removeAttribute("aria-disabled");
+        button.classList.remove("is-connected");
+      }
+    }
+
+    connections.hidden = true;
+
+    if (!sessionId) {
+      stopVerification(
+        "No verification session found. Start from the verification button in Discord.",
+        "error"
+      );
+    } else {
+      startSecurityCheck();
+    }
+
+    async function startSecurityCheck() {
+      setStatus("Checking your connection security. Please wait...");
+
+      try {
+        const response = await fetch(
+          `${API}/api/verification/security-check/${encodeURIComponent(sessionId)}`,
+          { method: "POST" }
+        );
+
+        const data = await response.json();
+
+        if (data.security_check === "blocked") {
+          stopVerification(
+            "Verification unsuccessful. Please turn off your VPN or proxy, then try again.",
+            "error"
+          );
+          return;
+        }
+
+        if (!response.ok || data.security_check !== "clear") {
+          stopVerification(
+            data.message ||
+              "We couldn't complete the security check. Please try again later.",
+            "error"
+          );
+          return;
+        }
+
+        discordButton.href =
+          `${API}/oauth/discord/start/${encodeURIComponent(sessionId)}`;
+
+        kickButton.href =
+          `${API}/oauth/kick/start/${encodeURIComponent(sessionId)}`;
+
+        if (result && messages[result]) {
+          setStatus(messages[result]);
+        }
+
+        connections.hidden = false;
+
+        await checkSession();
+
+        if (!stopped && !pollingStarted) {
+          pollingStarted = true;
+
+          pollingTimer = setInterval(() => {
+            if (!stopped) {
+              checkSession();
+            }
+          }, 5000);
+        }
+      } catch (error) {
+        stopVerification(
+          "Could not complete the security check. Please refresh and try again later.",
+          "error"
+        );
+      }
+    }
+
+    async function checkSession() {
+      if (stopped || checking) {
+        return;
+      }
+
+      checking = true;
+
+      try {
+        const response = await fetch(
+          `${API}/api/verification/session/${encodeURIComponent(sessionId)}`
+        );
+
+        const data = await response.json();
+
+        if (response.status === 404 || response.status === 410) {
+          stopVerification(
+            "Your verification session is unavailable or expired. Start again from Discord.",
+            "error"
+          );
+          return;
+        }
+
+        if (!response.ok) {
+          setStatus(
+            "Unable to check your session. Please refresh this page.",
+            "error"
+          );
+          return;
+        }
+
+        if (data.status === "vpn_blocked") {
+          stopVerification(
+            "Verification unsuccessful. Please turn off your VPN or proxy, then try again.",
+            "error"
+          );
+          return;
+        }
+
+        if (data.status === "security_check_failed") {
+          stopVerification(
+            "We couldn't complete the security check. Please try again later.",
+            "error"
+          );
+          return;
+        }
+
+        if (data.status === "verified") {
+          stopVerification(
+            "✅ Verification successful! Your Wildlines account is verified.",
+            "success"
+          );
+          return;
+        }
+
+        if (data.status === "duplicate_kick") {
+          stopVerification(
+            "Your Kick account is already linked to another Discord account. Please contact a server administrator for assistance.",
+            "error"
+          );
+          return;
+        }
+
+        if (data.status === "review_required") {
+          stopVerification(
+            "Your verification needs administrator review. Please wait for the server team to assist you.",
+            "loading"
+          );
+          return;
+        }
+
+        if (data.status === "rejected") {
+          stopVerification(
+            "Your verification was not approved. Please contact a server administrator if you believe this is a mistake.",
+            "error"
+          );
+          return;
+        }
+
+        const discordDone = Boolean(data.discord_connected);
+        const kickDone = Boolean(data.kick_connected);
+
+        
+        setConnectedButton(
+          discordButton,
+          discordButtonLabel,
+          discordDone,
+          "Discord"
+        );
+
+        setConnectedButton(
+          kickButton,
+          kickButtonLabel,
+          kickDone,
+          "Kick"
+        );
+
+        if (data.status === "ready_for_bot_review") {
+          setStatus(
+            "Both accounts are connected. Your verification is waiting for the bot to review it."
+          );
+        } else if (discordDone && kickDone) {
+          setStatus(
+            "Both accounts are connected. Your account checks and final verification are still pending."
+          );
+        } else {
+          const connected = [];
+
+          connected.push(
+            discordDone
+              ? "Discord: connected"
+              : "Discord: not connected"
+          );
+
+          connected.push(
+            kickDone
+              ? "Kick: connected"
+              : "Kick: not connected"
+          );
+
+          setStatus(connected.join(" · "));
+        }
+      } catch (error) {
+        setStatus(
+          "Could not reach the verification service. Please refresh and try again later.",
+          "error"
+        );
+      } finally {
+        checking = false;
+      }
+    }
+  </script>
+</body>
+</html>
