@@ -1,0 +1,5 @@
+.env
+node_modules/
+data/
+backend-check.mjs
+Jackpot-Jess-Bingo-Backup/
