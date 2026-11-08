@@ -1,0 +1,17 @@
+
+{
+  "name": "jackpot-jess-bingo",
+  "version": "1.0.0",
+  "description": "Jackpot Jess x Wildlines Bingo",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^18.0.9"
+  }
+}
