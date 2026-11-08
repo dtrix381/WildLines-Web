@@ -27,7 +27,7 @@ const saved=()=>{try{return JSON.parse(localStorage.getItem('slot-bingo:'+code)|
 let session=saved();
 function toast(t,error=false){const el=$('#toast');el.textContent=t;el.className='toast'+(error?' error':'');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.className='hidden',5000)}
 function persist(v){code=v.code;session=v;localStorage.setItem('slot-bingo:'+code,JSON.stringify(v));localStorage.setItem('slot-bingo:last',code);history.replaceState({},'', '?room='+code)}
-async function api(path,body){const r=await fetch('/api/'+path,{method:body===undefined?'GET':'POST',headers:{'content-type':'application/json',...(session?.token?{authorization:'Bearer '+session.token}:{})},...(body===undefined?{}:{body:JSON.stringify(body)})});const v=await r.json();if(!r.ok)throw Error(v.error||'Request failed.');return v}
+async function api(path,body){const r=await fetch('/bingo/api/'+path,{method:body===undefined?'GET':'POST',headers:{'content-type':'application/json',...(session?.token?{authorization:'Bearer '+session.token}:{})},...(body===undefined?{}:{body:JSON.stringify(body)})});const v=await r.json();if(!r.ok)throw Error(v.error||'Request failed.');return v}
 
 async function action(name,body={}){if(busy)return;busy=true;render();try{await api('rooms/'+code+'/'+name,body);await refresh(true)}catch(e){toast(e.message,true)}finally{busy=false;render()}}
 function image(g,cls=''){return g.image?'<img class="'+cls+'" src="'+esc(g.image)+'" alt="'+esc(g.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.opacity=0">':''}
